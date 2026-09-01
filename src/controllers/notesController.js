@@ -3,8 +3,8 @@ import createHttpError from 'http-errors';
 import { Note } from '../models/note.js';
 
 export const getAllNotes = async (req, res) => {
-  const page = 1;
-  const perPage = 10;
+  const page = Number(req.query.page) || 1;
+  const perPage = Number(req.query.perPage) || 10;
   const { tag, search } = req.query;
 
   const filter = {};
@@ -82,8 +82,7 @@ export const updateNote = async (req, res, next) => {
     const { noteId } = req.params;
 
     const note = await Note.findByIdAndUpdate(noteId, req.body, {
-      new: true,
-      runValidators: true,
+      returnDocument: 'after'
     });
 
     if (!note) {
