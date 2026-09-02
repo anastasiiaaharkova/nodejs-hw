@@ -3,15 +3,16 @@ import { Session } from '../models/session.js';
 import { User } from '../models/user.js';
 
 export const authenticate = async (req, res, next) => {
-  const { accessToken } = req.cookies;
+  const { sessionId, accessToken } = req.cookies;
 
   // 1. Перевіряємо наявність кукі
-  if (!accessToken) {
+  if (!accessToken || !sessionId) {
     throw createHttpError(401, 'Missing access token');
   }
 
   // 2. Якщо все ок, шукаємо сесію
   const session = await Session.findOne({
+    _id: sessionId,
     accessToken,
   });
 
